@@ -137,7 +137,13 @@ public class Model extends Observable {
      *  Empty spaces are stored as null.
      * */
     public static boolean emptySpaceExists(Board b) {
-        // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++){
+            for (int j = 0; j < b.size(); j++){
+                if (b.tile(i, j) == null){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -147,7 +153,16 @@ public class Model extends Observable {
      * given a Tile object t, we get its value with t.value().
      */
     public static boolean maxTileExists(Board b) {
-        // TODO: Fill in this function.
+        for (int i = 0; i < b.size(); i++){
+            for (int j = 0; j < b.size(); j++){
+                if (b.tile(i,j) == null){
+                    continue;
+                }
+                else if (b.tile(i,j).value() == MAX_PIECE){
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -158,8 +173,48 @@ public class Model extends Observable {
      * 2. There are two adjacent tiles with the same value.
      */
     public static boolean atLeastOneMoveExists(Board b) {
-        // TODO: Fill in this function.
+        return (emptySpaceExists(b) || haveSameVal(b));
+    }
+
+    private static boolean haveSameVal(Board b){
+
+        int curVal;
+        Tile curTile;
+        for (int i = 1; i < b.size() - 1; i++){
+            for (int j = 1; j < b.size() - 1; j++){
+               if (validNeighbor(b, i, j)) {
+                   return true;
+               }
+            }
+        }
+
+        return checkCornerCase(b);
+    }
+
+    private static boolean checkCornerCase(Board b){
+        if (b.tile(0, 0).value() == b.tile(0, 1).value() ||
+                b.tile(0, 0).value() == b.tile(1, 0).value()){
+            return true;
+        }
+        if (b.tile(3, 0).value() == b.tile(3, 1).value() ||
+                b.tile(3, 0).value() == b.tile(2, 0).value()){
+            return true;
+        }
+        if (b.tile(0, 3).value() == b.tile(0, 2).value() ||
+                b.tile(0, 3).value() == b.tile(1, 3).value()){
+            return true;
+        }
+        if (b.tile(3, 3).value() == b.tile(3, 2).value() ||
+                b.tile(3, 3).value() == b.tile(2, 3).value()){
+            return true;
+        }
         return false;
+    }
+
+    private static boolean  validNeighbor(Board b, int i , int j){
+        int curVal = b.tile(i, j).value();
+        return (curVal == b.tile(i - 1, j). value() || curVal == b.tile(i, j - 1).value() ||
+                curVal == b.tile(i, j + 1).value() || curVal == b.tile(i + 1, j).value());
     }
 
 
